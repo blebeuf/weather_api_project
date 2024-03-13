@@ -15,6 +15,7 @@ $(document).ready(function() {
         fetch(requestUrl)
             .then(response => {
                 if (!response.ok) {
+// this portion was updated with a tutor and referneced here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
@@ -22,6 +23,7 @@ $(document).ready(function() {
             .then(data => displayWeather(data))
             .catch(error => {
                 console.error('There has been a problem with your fetch operation:', error);
+                // prints to the main within <p>
                 $('#weather-info').html('<p>Failed to retrieve data. Please try again.</p>');
             });
     });
@@ -29,4 +31,16 @@ $(document).ready(function() {
 
 function displayWeather(data) {
     // Display temperature in Fahrenheit
+    const weatherHtml = `
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">${data.name}</h5>
+            <p class="card-text">Temperature: ${data.main.temp}°F</p>
+            <p class="card-text">Condition: ${data.weather[0].description}</p>
+            <p class="card-text">Humidity: ${data.main.humidity}%</p>
+            <p class="card-text">Wind Speed: ${data.wind.speed} mph</p>
+        </div>
+    </div>
+`;
+$('#weather-info').html(weatherHtml);
 }
