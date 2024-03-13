@@ -1,22 +1,35 @@
 const key = "11701a22eb50e7dd286864fa0017542d";
 
 $(document).ready(function() {
-    $('#search-button').click(function() {
-        const userInput = $('#user-input').val();
-        if (!userInput.trim()) {
+    // Abstracted search functionality into performSearch function for clarity.
+    const performSearch = () => {
+        const userInput = $('#user-input').val().trim();
+        if (!userInput) {
             $('#weather-info').html('<p>Please enter a city name.</p>');
             return;
         }
+
         const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userInput}&appid=${key}&units=imperial`;
         const fiveDayForecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${userInput}&appid=${key}&units=imperial`;
 
-        // Fetch current weather
         fetchWeather(currentWeatherUrl);
-
-        // Fetch 5-day forecast
         fetchFiveDayForecast(fiveDayForecastUrl);
+    };
+
+    // Setup click event listener
+    // information on click: https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event
+    $('#search-button').click(performSearch);
+
+    // Setup keypress (Enter key) event listener for user input
+    // information on keypress: https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
+    $('#user-input').keypress(function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent the default form action
+            performSearch();
+        }
     });
 });
+
 
 function fetchWeather(requestUrl) {
     fetch(requestUrl)
@@ -58,13 +71,16 @@ function fetchFiveDayForecast(requestUrl) {
         .catch(error => console.error('Fetch error for 5-day forecast:', error));
 }
 
+// five day forecast display
 function displayFiveDayForecast(data) {
     let forecastHtml = '<h2>5-Day Forecast:</h2><div class="d-flex justify-content-between flex-wrap">';
     
+    // 
     const forecasts = data.list.filter(forecast => forecast.dt_txt.includes("12:00:00"));
 
     forecasts.forEach(forecast => {
         const iconURL = `https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`;
+    //The toLocaleDateString() method is used to convert the Date object into a localized date string - displaying the date in a format that's  appropriate for the local user.
         forecastHtml += `
             <div class="weather-card card m-2" style="min-width: 18rem;">
                 <div class="card-body">
