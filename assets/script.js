@@ -1,7 +1,6 @@
 const key = "11701a22eb50e7dd286864fa0017542d";
 const userInputEl = $('#user-input');
 
-// error handler for the fetch
 $(document).ready(function() {
 // reference to button id in the HTML
     $('#search-button').click(function() {
@@ -11,11 +10,13 @@ $(document).ready(function() {
         const requestUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userInput}&appid=${key}&units=imperial`;
 
         
-// error handler for the fetch
+        // error handler for the fetch
+        // notes and review for arrow functions - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
         fetch(requestUrl)
             .then(response => {
                 if (!response.ok) {
-// this portion was updated with a tutor and referneced here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
+        // this portion was updated with a tutor and referneced here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
+        //used to create an exception and halt the normal execution flow of a program or function
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
@@ -30,17 +31,36 @@ $(document).ready(function() {
 });
 
 function displayWeather(data) {
-    // Display temperature in Fahrenheit
+    // Assuming temperature is displayed in Fahrenheit or Celsius
+    // displays icons on the card
+    const iconCode = data.weather[0].icon;
+    //example here: https://openweathermap.org/weather-conditions
+    const iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+    
     const weatherHtml = `
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">${data.name}</h5>
-            <p class="card-text">Temperature: ${data.main.temp}°F</p>
-            <p class="card-text">Condition: ${data.weather[0].description}</p>
-            <p class="card-text">Humidity: ${data.main.humidity}%</p>
-            <p class="card-text">Wind Speed: ${data.wind.speed} mph</p>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">${data.name}</h5>
+                <img src="${iconUrl}" alt="Weather icon">
+                <p class="card-text">Temperature: ${data.main.temp}°</p>
+                <p class="card-text">Condition: ${data.weather[0].description}</p>
+                <p class="card-text">Humidity: ${data.main.humidity}%</p>
+                <p class="card-text">Wind Speed: ${data.wind.speed}</p>
+            </div>
         </div>
-    </div>
-`;
-$('#weather-info').html(weatherHtml);
+    `;
+    $('#weather-info').html(weatherHtml);
+}
+// function to save searched cities in localStorage 
+function saveCity(newCity) {
+    // Try to retrieve the existing list of cities from localStorage
+    let cities = JSON.parse(localStorage.getItem('cities')) || [];
+    
+    // Check if the new city is already in the list to prevent duplicates
+    if (!cities.includes(newCity)) {
+        // Add the new city to the list
+        cities.push(newCity); 
+        // Save the updated list back to localStorage
+        localStorage.setItem('cities', JSON.stringify(cities));
+    }
 }
