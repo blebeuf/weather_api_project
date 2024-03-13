@@ -3,6 +3,7 @@ const userInputEl = $('#user-input');
 const recentSearch = "";
 const btnEl = $('#search-button');
 
+// error handler for the fetch
 function currentWeather (event) {
     event.preventDefault();
 
