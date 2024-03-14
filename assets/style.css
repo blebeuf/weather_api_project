@@ -1,2 +1,11 @@
 /* CURRENTLY USING BOOTSTRAP FOR MOST STYLE */
 /* https://getbootstrap.com/docs/5.3/layout/css-grid/#how-it-works */
+
+.container {
+    margin-left: 3%;
+    padding-left: 0;
+}
+
+.span {
+    color: rgb(255, 255, 255);
+}
