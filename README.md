@@ -56,4 +56,4 @@ If you created an application or package and would like other developers to cont
 
 ## Tests
 
-Here is the deployed application: 
+Here is the deployed application: https://blebeuf.github.io/weather_api_project/
